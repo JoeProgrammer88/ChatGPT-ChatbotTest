@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Chatbot Demo</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/client.js"></script>
+</head>
+
+<body>
+    <h1>Chatbot Demo</h1>
+    <div id="messages"></div>
+    <form id="message-form">
+        <input type="text" id="message-input" />
+        <button type="submit">Send</button>
+    </form>
+    <script>
+        const socket = io();
+
+        const messageForm = document.getElementById('message-form');
+        const messageInput = document.getElementById('message-input');
+        const messages = document.getElementById('messages');
+
+        // Listen for incoming messages from the server
+        socket.on('chat message', message => {
+            const li = document.createElement('li');
+            li.textContent = message;
+            messages.appendChild(li);
+        });
+
+        // Handle form submissions
+        messageForm.addEventListener('submit', event => {
+            event.preventDefault();
+
+            const message = messageInput.value.trim();
+            if (message) {
+                socket.emit('chat message', message);
+                messageInput.value = '';
+            }
+        });
+
+    </script>
+</body>
+
+</html>
